@@ -9,6 +9,7 @@ module Guard
     def initialize(watchers=[], options={})
       @input  = options[:input]
       @output = options[:output]
+      @rails  = options[:rails] || false
       super(watchers, options)
     end
 
@@ -36,6 +37,7 @@ module Guard
 
     def compile
       begin
+        require ::File.expand_path('../config/environment',  __FILE__) if @rails
         template = import(@input)
         File.open(@output,'w'){ |f| f.write(template) }
         UI.info         "Compiling #{@input} to #{@output}"
